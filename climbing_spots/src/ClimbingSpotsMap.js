@@ -1,17 +1,46 @@
-import React from 'react'
+import React, { useState } from 'react'
+// import { useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import useSwr from 'swr';
+const dotenv = require('dotenv')
+
+dotenv.config();
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 
 const ClimbingSpotsMap = () => {
 
+    const CLEFAPI = "...";
+    let resultatsAPI;
     const url = 'http://localhost:5000/spots';
-
     const {data, error } = useSwr(url, {fetcher});
+    const spots = data && !error ? data : [];
 
-    const spots = data && !error ? data.slice(0,10) : [];
+    const [info, setInfo] = useState('Info : aucun spot sélectionné');
+    const [activeSpot, setActiveSpot] = useState('');
+    const [infoWeatherDescription, setInfoWeatherDescription] = useState('aucun spot sélectionné');
+    const [infoTemperature, setInfoTemperature] = useState('aucun spot sélectionné');
 
+    const AppelAPI = (lat, long) =>{
+        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely&units=metric&lang=fr&appid=${CLEFAPI}`)
+        .then((reponse) => {
+            return reponse.json();
+        })
+        .then((data) => {
+            console.log(data);
+            resultatsAPI = data;
+            // console.log(resultatsAPI);
+            setInfoWeatherDescription(resultatsAPI.current.weather[0].description);
+            setInfoTemperature(`${Math.round(resultatsAPI.current.temp)}°`)
+        });
+    }
+
+    if (activeSpot !== ''){
+        // console.log(info);
+        console.log(activeSpot.spot)
+        AppelAPI(activeSpot.latitude, activeSpot.longitude);
+    }
+    
     return (
         <div>
             <div className="map-container">
@@ -27,18 +56,31 @@ const ClimbingSpotsMap = () => {
                     <Marker
                         key={spot.id}
                         position={[
-                            parseInt(spot.latitude),
-                            parseInt(spot.longitude)
+                            spot.latitude,
+                            spot.longitude
                         ]}
+                        eventHandlers={{
+                            click: (e) => {
+                                setActiveSpot(spot);
+                                setInfo(spot.spot)
+                                // console.log(e);
+                            }
+                        }}
                     >
                         <Popup>
                             <p>{spot.spot}</p>
                             <p>{spot.ville}</p>
-                            <p>{spot.hauteur}</p>
+                            <p>{spot.longitude}</p>
                         </Popup>
                     </Marker>
                 ))}
                 </MapContainer>
+                <div>
+                    <h1>{info}</h1>
+                    <p>{activeSpot.spot}</p>
+                    <p>Description : {infoWeatherDescription}</p>
+                    <p>Température : {infoTemperature}</p>
+                </div>
             </div>    
         </div>
     )

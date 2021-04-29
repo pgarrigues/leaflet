@@ -1,22 +1,45 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+// import { useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import data from './data/centres-depistage-covid.json'
 
 const CovidMap = () => {
 
-  const [activeCenter, setActiveCenter] = useState(null);
-  
-  let info = 'Info : aucun centre séléctionné';
-  if (activeCenter){
-    info = `Info : ${activeCenter.fields.commune}`;
-    console.log(activeCenter);
+  // const CLEFAPI = "bcb0ed88746dcd2bad3f2c840ce3698b";
+  const [info, setInfo] = useState('Info : aucun centre sélectionné');
+  const [activeCenter, setActiveCenter] = useState('');
+
+  if (activeCenter !== ''){
+    console.log(info);
+    console.log(activeCenter.fields.commune);
   }
+
+  // const [infoWeather, setInfoWeather] = useState('Pas de météo');
+
+  // const AppelAPI = (lat, long) =>{
+  //   fetch(
+  //   `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely&units=metric&lang=fr&appid=${CLEFAPI}`
+  // )
+  //   .then((reponse) => {
+  //     return reponse.json();
+  //   })
+  //   .then((data) => {
+  //     console.log(data);
+  //   });
+  // }
+
+  // if (activeCenter){
+    // info = `Info : ${activeCenter.fields.commune}`;
+    // console.log(activeCenter);
+    // AppelAPI(activeCenter.geometry.coordinates[1], activeCenter.geometry.coordinates[0])
+    // console.log(data);
+  // }
   
-  useEffect(() => {
-    if(activeCenter){
-      document.title = `${activeCenter.fields.commune}`;
-    }
-  }, [activeCenter])
+  // useEffect(() => {
+  //   if(activeCenter){
+  //     document.title = `${activeCenter.fields.commune}`;
+  //   }
+  // }, [activeCenter])
     
   return (
     <div className="map-container">
@@ -34,9 +57,10 @@ const CovidMap = () => {
             ]}
             eventHandlers={{
                 click: (e) => {
-                  console.log('marker clicked', e);
                   setActiveCenter(center);
-                  // console.log(center);
+                  setInfo(center.fields.commune);
+                  console.log(e);
+                  console.log(center.geometry.coordinates[1]);
                 },
               }
             }
@@ -51,6 +75,8 @@ const CovidMap = () => {
       </MapContainer>
       <div>
         <h1 id='info'>{info}</h1>
+        <p>{activeCenter.recordid}</p>
+        {/* <h2>{infoWeather}</h2> */}
       </div>
     </div>    
   )

@@ -5,7 +5,6 @@ import data from './data/centres-depistage-covid.json'
 
 const CovidMap = () => {
 
-  // const CLEFAPI = "bcb0ed88746dcd2bad3f2c840ce3698b";
   const [info, setInfo] = useState('Info : aucun centre sélectionné');
   const [activeCenter, setActiveCenter] = useState('');
 

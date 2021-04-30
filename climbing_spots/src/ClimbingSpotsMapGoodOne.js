@@ -22,7 +22,7 @@ const ClimbingSpotsMap = () => {
 
     // const fetcher = (...args) => fetch(...args).then(res => res.json());
 
-    const CLEFAPI = "bcb0ed88746dcd2bad3f2c840ce3698b";
+    const CLEFAPI = "...";
     let resultatsAPI;
 
     // const url = 'http://localhost:5000/spots';

@@ -1,19 +1,16 @@
 import React, { useState } from 'react'
-import { useEffect } from 'react'
-import Spot from './Spot'
 import Weather from './Weather'
-
+import { useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 // import useSwr from 'swr';
 import axios from 'axios';
 const dotenv = require('dotenv')
 dotenv.config();
 
-
 const ClimbingSpotsMap = () => {
     const [dataSpots, setDataSpots] = useState([]);
     const [activeSpot, setActiveSpot] = useState('');
-    const [info, setInfo] = useState('Aucun spot sélectionné');
+    const [info, setInfo] = useState('Info : aucun spot sélectionné');
     const [infoWeatherDescription, setInfoWeatherDescription] = useState('aucun spot sélectionné');
     const [infoTemperature, setInfoTemperature] = useState('aucun spot sélectionné');
 
@@ -25,7 +22,7 @@ const ClimbingSpotsMap = () => {
 
     // const fetcher = (...args) => fetch(...args).then(res => res.json());
 
-    const CLEFAPI = "...";
+    const CLEFAPI = "bcb0ed88746dcd2bad3f2c840ce3698b";
     let resultatsAPI;
 
     // const url = 'http://localhost:5000/spots';
@@ -46,9 +43,9 @@ const ClimbingSpotsMap = () => {
         .then((data) => {
             console.log(data);
             resultatsAPI = data;
-            // console.log(resultatsAPI);
             setInfoWeatherDescription(resultatsAPI.current.weather[0].description);
-            setInfoTemperature(`${Math.round(resultatsAPI.current.temp)}°`)
+            setInfoTemperature(`${Math.round(resultatsAPI.current.temp)}°`);
+            console.log(infoWeatherDescription);
         });
     }
 
@@ -61,7 +58,7 @@ const ClimbingSpotsMap = () => {
         <div>
             <div className="map-container">
                 <div>
-                    <p>ClimbingSpotsMap</p>
+                    <h1>ClimbingSpotsMap</h1>
                 </div>
                 <MapContainer className='map' center={[48.866667, 2.333333]} zoom={7} scrollWheelZoom={false}>
                  <TileLayer
@@ -93,15 +90,14 @@ const ClimbingSpotsMap = () => {
                     </Marker>
                 ))}
                 </MapContainer>
+                <div>
+                    <h1>{info}</h1>
+                    <p>{activeSpot.spot}</p>
+                    <p>Description : {infoWeatherDescription}</p>
+                    <p>Température : {infoTemperature}</p>
+                </div>
+                <Weather infoWeatherDescription={infoWeatherDescription}/>
             </div>
-            <Spot
-                info={info}
-                activeSpot={activeSpot}
-            />
-            <Weather
-                infoWeatherDescription={infoWeatherDescription}                    
-                infoTemperature={infoTemperature}
-            />
         </div>
     )
 }

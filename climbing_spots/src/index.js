@@ -5,7 +5,6 @@ import './index.css';
 // import CovidMap from './CovidMap'
 import ClimbingSpotsMap from './ClimbingSpotsMap'
 
-
 ReactDOM.render(
   <React.StrictMode>
     {/* <Header/> */}
